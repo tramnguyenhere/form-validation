@@ -52,6 +52,12 @@
         flex-direction: column;
         }
 
+        .form-group.vertical {
+          float: left;
+          text-align: left;
+          width: 100%;
+        }
+
         .form-label,
         .form-message {
         text-align: left;
@@ -112,6 +118,18 @@
         .spacer {
         margin-top: 36px;
         }
+
+        .radio-box {
+          display: flex;
+          justify-content: left;
+          align-items: center;
+        }
+
+        .gender-text {
+          padding-left: 10px;
+          padding-: -5px;
+          font-size: 1.3rem;
+        }
     </style>
 </head>
 <body>
@@ -143,7 +161,24 @@
       
           <div class="form-group">
             <label for="password_confirmation" class="form-label">Re-type password</label>
-            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Type your password again" class="form-control type="password" class="form-control">
+            <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Type your password again" type="password" class="form-control">
+            <span class="form-message"></span>
+          </div>
+
+          <div class="form-group vertical">
+            <label for="password_confirmation" class="form-label">Gender</label>
+            <div class="radio-box">
+              <input name="gender" type="radio" value="Male" class="form-control">
+              <span class="gender-text">Male</span>
+            </div>
+            <div class="radio-box">
+              <input name="gender" type="radio" value="Female" class="form-control">
+              <span class="gender-text">Female</span>
+            </div>
+            <div class="radio-box">
+              <input name="gender" type="radio" value="Female" class="form-control">
+              <span class="gender-text">Other</span>
+            </div>
             <span class="form-message"></span>
           </div>
       
@@ -156,12 +191,15 @@
           //Mong muốn nhận được
           Validator({
               form: '#form-1',
+              formGroupSelector: '.form-group',
               errorSelector: '.form-message',
               rules: [
                   Validator.isRequired('#fullname', 'Full name must be filled out'),
                   Validator.isRequired('#email', 'This must be filled out'),
                   Validator.isEmail('#email', 'Email must be filled out'),
                   Validator.minLength('#password', 6),
+                  Validator.isRequired('#password_confirmation', 'This must be filled out'),
+                  Validator.isRequired('input[name="gender"]', 'This must be filled out'),
                   Validator.isConfirmed('#password_confirmation', function() {
                     return document.querySelector('#form-1 #password').value;
                   }, 'Password must be confirmed'),
