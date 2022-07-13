@@ -26,7 +26,9 @@ function Validator(options) {
       switch (inputElement.type) {
         case 'checkbox':
         case 'radio':
-          errorMessage = rules[i](inputElement.value);
+          errorMessage = rules[i](
+            formElement.querySelector(rule.selector + ':checked')
+          );
           break;
         default:
           errorMessage = rules[i](inputElement.value);
@@ -69,15 +71,31 @@ function Validator(options) {
       if (isFormValid) {
         //Trường hợp submit với JavaScript
         if (typeof options.onSubmit === 'function') {
-          var enableInputs = formElement.querySelectorAll(
-            '[name]:not([disabled])'
-          );
+          var enableInputs = formElement.querySelectorAll('[name]');
 
           var formValues = Array.from(enableInputs).reduce(function (
             values,
             input
           ) {
-            values[input.name] = input.value;
+            switch (input.type) {
+              case 'radio':
+                values[input.name] = formElement.querySelector(
+                  'input[name="' + input.name + '"]:checked'
+                ).value;
+                break;
+              case 'checkbox':
+                values[input.name] = Array.from(
+                  formElement.querySelectorAll(
+                    'input[name="' + input.name + '"]:checked'
+                  )
+                ).map((inp) => inp.value);
+                break;
+              case 'file':
+                values[input.name] = input.files;
+                break;
+              default:
+                values[input.name] = input.value;
+            }
             return values;
           },
           {});
@@ -99,9 +117,9 @@ function Validator(options) {
         selectorRules[rule.selector] = [rule.test];
       }
 
-      var inputElement = formElement.querySelector(rule.selector);
+      var inputElements = formElement.querySelectorAll(rule.selector);
 
-      if (inputElement) {
+      Array.from(inputElements).forEach(function (inputElement) {
         //Xử lý trường hợp blur khỏi input
         inputElement.onblur = function () {
           validate(inputElement, rule);
@@ -117,7 +135,7 @@ function Validator(options) {
             'invalid'
           );
         };
-      }
+      });
     });
   }
 }
@@ -130,7 +148,7 @@ Validator.isRequired = function (selector, message) {
   return {
     selector: selector,
     test: function (value) {
-      return value.trim() ? undefined : message || 'Please fill in the blank!';
+      return value ? undefined : message || 'Please fill in the blank!';
     },
   };
 };

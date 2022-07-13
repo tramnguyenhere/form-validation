@@ -127,7 +127,6 @@
 
         .gender-text {
           padding-left: 10px;
-          padding-: -5px;
           font-size: 1.3rem;
         }
     </style>
@@ -165,22 +164,41 @@
             <span class="form-message"></span>
           </div>
 
+          <div class="form-group">
+            <label for="avatar" class="form-label">Avatar</label>
+            <input id="avatar" name="avatar" type="file" class="form-control">
+            <span class="form-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="province" class="form-label">Province/City</label>
+            <select id="province" name="province" class="form-control">
+              <option value="">-- Choose your province/city --</option>
+              <option value="tampere">Tampere</option>
+              <option value="vaasa">Vaasa</option>
+              <option value="helsinki">Helsinki</option>
+            </select>
+            <span class="form-message"></span>
+          </div>
+
           <div class="form-group vertical">
-            <label for="password_confirmation" class="form-label">Gender</label>
+            <label for="gender" class="form-label">Gender</label>
             <div class="radio-box">
-              <input name="gender" type="radio" value="Male" class="form-control">
+              <input name="gender" type="checkbox" value="Male" class="form-control">
               <span class="gender-text">Male</span>
             </div>
             <div class="radio-box">
-              <input name="gender" type="radio" value="Female" class="form-control">
+              <input name="gender" type="checkbox" value="Female" class="form-control">
               <span class="gender-text">Female</span>
             </div>
             <div class="radio-box">
-              <input name="gender" type="radio" value="Female" class="form-control">
+              <input name="gender" type="checkbox" value="Other" class="form-control">
               <span class="gender-text">Other</span>
             </div>
             <span class="form-message"></span>
           </div>
+
+          
       
           <button class="form-submit">Đăng ký</button>
         </form>
@@ -196,10 +214,12 @@
               rules: [
                   Validator.isRequired('#fullname', 'Full name must be filled out'),
                   Validator.isRequired('#email', 'This must be filled out'),
+                  Validator.isRequired('#avatar', 'This must be submited'),
                   Validator.isEmail('#email', 'Email must be filled out'),
                   Validator.minLength('#password', 6),
                   Validator.isRequired('#password_confirmation', 'This must be filled out'),
                   Validator.isRequired('input[name="gender"]', 'This must be filled out'),
+                  Validator.isRequired('#province', 'This must be selected'),
                   Validator.isConfirmed('#password_confirmation', function() {
                     return document.querySelector('#form-1 #password').value;
                   }, 'Password must be confirmed'),
